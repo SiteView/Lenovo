@@ -1,0 +1,78 @@
+AppPage * {
+	font: 23px "youyuan";
+}
+
+QPushButton#buttonResolve
+{
+	color: white;
+	font-size: 15px;
+	background-color: rgb(73, 23, 39);
+	border:1px solid #5d263e;
+}
+QPushButton#buttonResolve:hover
+{
+	background-color: rgb(110,38,52);
+}
+
+
+QPushButton#buttonResolve:pressed
+{
+	background-color: rgb(211,109,137);
+	border:1px solid #5d263e;
+}
+
+QPushButton[UIClass~=wbutton]
+{
+	font: 16px;
+	color: white;
+	border-image: url(:/images/wizardbutton.png);
+	border-width: 2px;
+}
+
+QPushButton:disabled[UIClass~=wbutton]
+{
+	font: 16px;
+	color: white;
+	border-image: url(:/images/wizardbutton_d.png);
+	border-width: 2px;
+}
+
+QLabel[UIClass~=wtext]
+{
+	font: 23px;
+	color: white;
+	qproperty-wordWrap: true;
+}
+
+QLabel[UIClass~=wtext2]
+{
+	font: 18px;
+	color: white;
+	qproperty-wordWrap: true;
+	qproperty-alignment: "AlignLeft | AlignTop";
+}
+
+QLabel[UIClass~=sline]
+{
+	qproperty-wordWrap: false;
+}
+
+QLabel[UIClass~=wlabel]
+{
+	font: 16px;
+	color: white;
+}
+
+QLineEdit[UIClass~=winput]
+{
+}
+
+QPushButton[UIClass~=moviePlayButton]
+{
+	border-image: url(:/images/movie_play_3.png)
+}
+
+QPushButton:pressed[UIClass~=moviePlayButton]
+{
+	border-image: url(:/images/movie_play_1.png)
+}

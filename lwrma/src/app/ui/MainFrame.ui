@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Frame</class>
+ <widget class="QFrame" name="Frame">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1042</width>
+    <height>819</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <property name="frameShape">
+   <enum>QFrame::NoFrame</enum>
+  </property>
+  <property name="frameShadow">
+   <enum>QFrame::Plain</enum>
+  </property>
+  <widget class="QPushButton" name="buttonRouterState">
+   <property name="geometry">
+    <rect>
+     <x>55</x>
+     <y>90</y>
+     <width>294</width>
+     <height>204</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>route state</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="UIText" stdset="0">
+    <string>120000</string>
+   </property>
+   <property name="bg" stdset="0">
+    <string>:/images/r_state_h.png</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buttonPwdSeting">
+   <property name="geometry">
+    <rect>
+     <x>325</x>
+     <y>90</y>
+     <width>294</width>
+     <height>204</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>password seting</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="UIText" stdset="0">
+    <string>120001</string>
+   </property>
+   <property name="bg" stdset="0">
+    <string>:/images/p_setting_h.png</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buttonSoftWareSetting">
+   <property name="geometry">
+    <rect>
+     <x>595</x>
+     <y>90</y>
+     <width>294</width>
+     <height>204</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>software setting</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="UIText" stdset="0">
+    <string>120002</string>
+   </property>
+   <property name="bg" stdset="0">
+    <string>:/images/s_setting_h.png</string>
+   </property>
+  </widget>
+  <widget class="QStackedWidget" name="stackedWidget">
+   <property name="geometry">
+    <rect>
+     <x>54</x>
+     <y>264</y>
+     <width>911</width>
+     <height>341</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="page">
+    <widget class="QPushButton" name="buttonResolve">
+     <property name="geometry">
+      <rect>
+       <x>550</x>
+       <y>190</y>
+       <width>91</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>微软雅黑</family>
+      </font>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="text">
+      <string>resolve</string>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
+     </property>
+     <property name="UIText" stdset="0">
+      <string>120015</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lab_data">
+     <property name="geometry">
+      <rect>
+       <x>260</x>
+       <y>0</y>
+       <width>651</width>
+       <height>271</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <zorder>lab_data</zorder>
+    <zorder>buttonResolve</zorder>
+   </widget>
+   <widget class="QWidget" name="page_2">
+    <property name="styleSheet">
+     <string notr="true">QLineEdit
+{
+     background-color: rgb(199,218,154);      
+     color: rgb(48, 91, 0);
+     width: 180px;
+     height: 34px;
+     padding-left: 4px;
+     selection-background-color: rgb(149,181,66);
+ 	 border: 0px solid gray; 
+}
+QLineEdit:focus
+{
+	border: 1px solid rgb(48, 91, 0);
+	border-radius: 4px
+}</string>
+    </property>
+    <widget class="QLineEdit" name="edt_1">
+     <property name="geometry">
+      <rect>
+       <x>248</x>
+       <y>194</y>
+       <width>200</width>
+       <height>20</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="edt_2">
+     <property name="geometry">
+      <rect>
+       <x>248</x>
+       <y>226</y>
+       <width>200</width>
+       <height>20</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="edt_3">
+     <property name="geometry">
+      <rect>
+       <x>248</x>
+       <y>258</y>
+       <width>200</width>
+       <height>20</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="edt_4">
+     <property name="geometry">
+      <rect>
+       <x>248</x>
+       <y>75</y>
+       <width>200</width>
+       <height>20</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="edt_5">
+     <property name="geometry">
+      <rect>
+       <x>248</x>
+       <y>107</y>
+       <width>200</width>
+       <height>20</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="buttonYes">
+     <property name="geometry">
+      <rect>
+       <x>656</x>
+       <y>230</y>
+       <width>75</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>yes</string>
+     </property>
+     <property name="UIText" stdset="0">
+      <string>-1</string>
+     </property>
+     <property name="bg" stdset="0">
+      <string>tick</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="buttonNo">
+     <property name="geometry">
+      <rect>
+       <x>718</x>
+       <y>230</y>
+       <width>75</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>no</string>
+     </property>
+     <property name="UIText" stdset="0">
+      <string>-1</string>
+     </property>
+     <property name="bg" stdset="0">
+      <string>cross</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page_3">
+    <widget class="QPushButton" name="buttonYes3">
+     <property name="geometry">
+      <rect>
+       <x>656</x>
+       <y>230</y>
+       <width>75</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>yes</string>
+     </property>
+     <property name="UIText" stdset="0">
+      <string>-1</string>
+     </property>
+     <property name="bg" stdset="0">
+      <string>tick</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="buttonNo3">
+     <property name="geometry">
+      <rect>
+       <x>718</x>
+       <y>230</y>
+       <width>75</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>No</string>
+     </property>
+     <property name="UIText" stdset="0">
+      <string>-1</string>
+     </property>
+     <property name="bg" stdset="0">
+      <string>cross</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="switch1">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>60</y>
+       <width>141</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>PushButton</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="switch2">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>118</y>
+       <width>141</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>PushButton</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="switch3">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>176</y>
+       <width>141</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>PushButton</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page_4">
+    <widget class="QLabel" name="label_13">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>20</y>
+       <width>111</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>linked list</string>
+     </property>
+     <property name="UIText" stdset="0">
+      <string>120017</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_14">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>130</y>
+       <width>91</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>history list</string>
+     </property>
+     <property name="UIText" stdset="0">
+      <string>120018</string>
+     </property>
+    </widget>
+    <widget class="QListView" name="listView">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>50</y>
+       <width>191</width>
+       <height>71</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QListView" name="listView_2">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>150</y>
+       <width>191</width>
+       <height>71</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QListView" name="listView_3">
+     <property name="geometry">
+      <rect>
+       <x>360</x>
+       <y>50</y>
+       <width>191</width>
+       <height>131</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="buttonYes4">
+     <property name="geometry">
+      <rect>
+       <x>360</x>
+       <y>200</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Yes</string>
+     </property>
+     <property name="UIText" stdset="0">
+      <string>110005</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="buttonNo4">
+     <property name="geometry">
+      <rect>
+       <x>470</x>
+       <y>200</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>No</string>
+     </property>
+     <property name="UIText" stdset="0">
+      <string>110006</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="buttonToRight">
+     <property name="geometry">
+      <rect>
+       <x>260</x>
+       <y>80</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&gt;&gt;</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="buttonToLeft">
+     <property name="geometry">
+      <rect>
+       <x>260</x>
+       <y>120</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&lt;&lt;</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="buttonGotoAdvance">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>604</y>
+     <width>100</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>goto advanced setting</string>
+   </property>
+   <property name="UIText" stdset="0">
+    <string>120021</string>
+   </property>
+   <property name="bg" stdset="0">
+    <string>advance</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buttonInstallNew">
+   <property name="geometry">
+    <rect>
+     <x>720</x>
+     <y>604</y>
+     <width>100</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>install new router</string>
+   </property>
+   <property name="UIText" stdset="0">
+    <string>120020</string>
+   </property>
+   <property name="bg" stdset="0">
+    <string>switch</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelVersion">
+   <property name="geometry">
+    <rect>
+     <x>45</x>
+     <y>642</y>
+     <width>651</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 25 12pt &quot;HelveticaNeueLT Std Thin&quot;;
+color: rgb(86,66,44);</string>
+   </property>
+   <property name="text">
+    <string>Software: 1.0.00.00.0000 Lenovo all right reserved</string>
+   </property>
+   <property name="UIText" stdset="0">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buttonExit">
+   <property name="geometry">
+    <rect>
+     <x>930</x>
+     <y>0</y>
+     <width>30</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>x</string>
+   </property>
+   <property name="UIText" stdset="0">
+    <string>-1</string>
+   </property>
+   <property name="bg" stdset="0">
+    <string>exit</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buttonAttachDevice">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>604</y>
+     <width>100</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>install new router</string>
+   </property>
+   <property name="UIText" stdset="0">
+    <string>120035</string>
+   </property>
+   <property name="bg" stdset="0">
+    <string>attachdevice</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buttonQuestion">
+   <property name="geometry">
+    <rect>
+     <x>900</x>
+     <y>0</y>
+     <width>30</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>x</string>
+   </property>
+   <property name="UIText" stdset="0">
+    <string>-1</string>
+   </property>
+   <property name="bg" stdset="0">
+    <string>question</string>
+   </property>
+  </widget>
+  <zorder>labelVersion</zorder>
+  <zorder>buttonRouterState</zorder>
+  <zorder>buttonPwdSeting</zorder>
+  <zorder>buttonSoftWareSetting</zorder>
+  <zorder>stackedWidget</zorder>
+  <zorder>buttonGotoAdvance</zorder>
+  <zorder>buttonInstallNew</zorder>
+  <zorder>buttonExit</zorder>
+  <zorder>buttonAttachDevice</zorder>
+  <zorder>buttonQuestion</zorder>
+ </widget>
+ <resources>
+  <include location="../app.qrc"/>
+ </resources>
+ <connections/>
+</ui>

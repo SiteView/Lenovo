@@ -1,0 +1,13 @@
+QPushButton{border-image: url(:/images/exit_normal.png);
+	border-color:none;
+	border-width:0px;
+	background-repeat:none;
+}
+QPushButton:hover{
+border-image: url(:/images/exit_hover.png);
+}
+
+QPushButton:pressed{
+border-image: url(:/images/exit_selected.png);
+
+}

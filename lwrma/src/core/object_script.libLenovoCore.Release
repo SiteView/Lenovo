@@ -1,0 +1,22 @@
+CREATE ..\..\release\libLenovoCore.a
+ADDMOD release\AsyncOp.o
+ADDMOD release\AsyncOpImpl.o
+ADDMOD release\Bean.o
+ADDMOD release\BeanImpl.o
+ADDMOD release\Logger.o
+ADDMOD release\LoggerImpl.o
+ADDMOD release\SoapCore.o
+ADDMOD release\SoapCoreImpl.o
+ADDMOD release\System.o
+ADDMOD release\SystemImpl.o
+ADDMOD release\wlanlib.o
+ADDMOD release\misc.o
+ADDMOD release\moc_AsyncOp.o
+ADDMOD release\moc_Bean.o
+ADDMOD release\moc_SoapCore.o
+ADDMOD release\moc_System.o
+ADDMOD release\moc_AsyncOpImpl.o
+ADDMOD release\moc_BeanImpl.o
+ADDMOD release\moc_SoapCoreImpl.o
+ADDMOD release\moc_SystemImpl.o
+SAVE

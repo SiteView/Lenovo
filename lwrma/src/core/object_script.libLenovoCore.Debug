@@ -1,0 +1,22 @@
+CREATE ..\..\debug\libLenovoCore.a
+ADDMOD debug\AsyncOp.o
+ADDMOD debug\AsyncOpImpl.o
+ADDMOD debug\Bean.o
+ADDMOD debug\BeanImpl.o
+ADDMOD debug\Logger.o
+ADDMOD debug\LoggerImpl.o
+ADDMOD debug\SoapCore.o
+ADDMOD debug\SoapCoreImpl.o
+ADDMOD debug\System.o
+ADDMOD debug\SystemImpl.o
+ADDMOD debug\wlanlib.o
+ADDMOD debug\misc.o
+ADDMOD debug\moc_AsyncOp.o
+ADDMOD debug\moc_Bean.o
+ADDMOD debug\moc_SoapCore.o
+ADDMOD debug\moc_System.o
+ADDMOD debug\moc_AsyncOpImpl.o
+ADDMOD debug\moc_BeanImpl.o
+ADDMOD debug\moc_SoapCoreImpl.o
+ADDMOD debug\moc_SystemImpl.o
+SAVE
