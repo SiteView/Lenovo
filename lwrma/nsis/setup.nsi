@@ -1,4 +1,4 @@
-ï»¿!include "MUI2.nsh"
+!include "MUI2.nsh"
 !define MUI_ABORTWARNING
 
 #!define MUI_FINISHPAGE_RUN "$INSTDIR\lwrma.exe"
@@ -16,21 +16,21 @@
 
 !define APPNAME "Lenovo Wireless Router Manage Assistant"
 !define APPNAME_KEY "lwrma"
-!define APPVERSION "1.0.169.16"
+!define APPVERSION "1.0.169.17"
 
-LangString u_AppName ${LANG_SIMPCHINESE} "è”æƒ³æ— çº¿è·¯ç”±ç®¡ç†åŠ©æ‰‹"
+LangString u_AppName ${LANG_SIMPCHINESE} "ÁªÏëÎŞÏßÂ·ÓÉ¹ÜÀíÖúÊÖ"
 LangString u_AppName ${LANG_ENGLISH} "Lenovo Wireless Router Manage Assistant"
 
-LangString u_SecReq ${LANG_SIMPCHINESE} "æ— çº¿è·¯ç”±ç®¡ç†åŠ©æ‰‹(å¿…éœ€)"
+LangString u_SecReq ${LANG_SIMPCHINESE} "ÎŞÏßÂ·ÓÉ¹ÜÀíÖúÊÖ(±ØĞè)"
 LangString u_SecReq ${LANG_ENGLISH} "Wireless Router Manage Assistant (required)"
 
-#LangString u_SecHelp ${LANG_SIMPCHINESE} "å¸®åŠ©æ–‡æ¡£"
+#LangString u_SecHelp ${LANG_SIMPCHINESE} "°ïÖúÎÄµµ"
 #LangString u_SecHelp ${LANG_ENGLISH} "Help File"
 
-LangString u_SecStartMenu ${LANG_SIMPCHINESE} "å¼€å§‹èœå•å¿«æ·æ–¹å¼"
+LangString u_SecStartMenu ${LANG_SIMPCHINESE} "¿ªÊ¼²Ëµ¥¿ì½İ·½Ê½"
 LangString u_SecStartMenu ${LANG_ENGLISH} "Start Menu Shortcuts"
 
-LangString u_SecDesktopIcon ${LANG_SIMPCHINESE} "æ¡Œé¢å¿«æ·æ–¹å¼"
+LangString u_SecDesktopIcon ${LANG_SIMPCHINESE} "×ÀÃæ¿ì½İ·½Ê½"
 LangString u_SecDesktopIcon ${LANG_ENGLISH} "Desktop Shortcuts"
 
 Name $(u_AppName)
@@ -74,13 +74,13 @@ Section $(u_SecStartMenu)
 	SetShellVarContext all
 	CreateDirectory "$SMPROGRAMS\Lenovo\Wireless Router Manage Assistant"
 	CreateShortCut "$SMPROGRAMS\Lenovo\Wireless Router Manage Assistant\Uninstall.lnk" "$INSTDIR\uninst.exe"
-	CreateShortCut "$SMPROGRAMS\Lenovo\Wireless Router Manage Assistant\è”æƒ³æ— çº¿è·¯ç”±ç®¡ç†åŠ©æ‰‹.lnk" "$INSTDIR\lwrma.exe"
-	CreateShortCut "$SMPROGRAMS\Lenovo\Wireless Router Manage Assistant\å¸®åŠ©.lnk" "$INSTDIR\help.pdf"
+	CreateShortCut "$SMPROGRAMS\Lenovo\Wireless Router Manage Assistant\ÁªÏëÎŞÏßÂ·ÓÉ¹ÜÀíÖúÊÖ.lnk" "$INSTDIR\lwrma.exe"
+	CreateShortCut "$SMPROGRAMS\Lenovo\Wireless Router Manage Assistant\°ïÖú.lnk" "$INSTDIR\help.pdf"
 SectionEnd
 
 Section $(u_SecDesktopIcon)
 	SetShellVarContext all
-	CreateShortCut "$DESKTOP\è”æƒ³æ— çº¿è·¯ç”±ç®¡ç†åŠ©æ‰‹.lnk" "$INSTDIR\lwrma.exe"
+	CreateShortCut "$DESKTOP\ÁªÏëÎŞÏßÂ·ÓÉ¹ÜÀíÖúÊÖ.lnk" "$INSTDIR\lwrma.exe"
 SectionEnd
 
 Section "Uninstall"
@@ -92,7 +92,7 @@ Section "Uninstall"
 	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME_KEY}"
 	DeleteRegKey HKLM "Software\Lenovo\Wireless Router Manage Assistant"
 	DeleteRegValue HKLM "Software\Microsoft\Windows\CurrentVersion\Run" "lwrma_autostart"
-	Delete "$DESKTOP\è”æƒ³æ— çº¿è·¯ç”±ç®¡ç†åŠ©æ‰‹.lnk"
+	Delete "$DESKTOP\ÁªÏëÎŞÏßÂ·ÓÉ¹ÜÀíÖúÊÖ.lnk"
 	RMDir /r "$SMPROGRAMS\Lenovo\Wireless Router Manage Assistant"
 	RMDir /r "$INSTDIR"
 SectionEnd

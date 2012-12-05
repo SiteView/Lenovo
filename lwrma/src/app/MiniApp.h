@@ -113,6 +113,8 @@ private Q_SLOTS:
 	void onUpdateDownloadFinished();
 	void changeUptimeTimer();
 	void onNetworkConnectionChanged();
+    void onWakeUpNetworkConnectionChanged();
+    void onSleepNetworkConnectionChanged();
 
 private:
 	void unloadPage();
@@ -176,6 +178,8 @@ private:
 	QString m_updateVer;
 
 	int m_baseUptimeMinutes;
+
+    int m_baseConnectMinutes;
 	QTimer m_userTimer1;
 	QElapsedTimer m_userTimer2;
 

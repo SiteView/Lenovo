@@ -77,6 +77,7 @@ Q_SIGNALS:
 	void wlanInterfaceChanged();
 	void networkConnectionChanged();
     void systemResumed();
+    void systemSleep();
     void systemwakeup();
 
 private:

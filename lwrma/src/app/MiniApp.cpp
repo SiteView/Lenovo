@@ -135,6 +135,7 @@ MiniApp::MiniApp(int& argc, char **argv)
 	m_updateNam = new QNetworkAccessManager(this);
 	m_updateReply = NULL;
 	m_baseUptimeMinutes = 0;
+    m_baseConnectMinutes=0;
 	m_disconnectedPrompt = false;
 }
 
@@ -319,7 +320,8 @@ int MiniApp::run()
 	}
 
 	connect(system(), SIGNAL(networkConnectionChanged()), SLOT(onNetworkConnectionChanged()));
-    connect(system(), SIGNAL(systemResumed()), SLOT(onNetworkConnectionChanged()));//sleep
+    connect(system(), SIGNAL(systemSleep()), SLOT(onSleepNetworkConnectionChanged()));//sleep
+    connect(system(), SIGNAL(systemResumed()), SLOT(onWakeUpNetworkConnectionChanged()));//sleep
     connect(system(), SIGNAL(systemwakeup()), SLOT(onNetworkConnectionChanged()));//sleepp
 
 	retval = exec();
@@ -1127,9 +1129,54 @@ QString MiniApp::savedWifiPassword() const
 
 void MiniApp::changeUptimeTimer()
 {
-	setUptimeMinutes(m_baseUptimeMinutes + m_userTimer2.elapsed() / 60000);
+//    LOG_DEBUG(QString::fromUtf8("m_basseConnectMinutes = %1").arg(m_baseConnectMinutes));
+    setUptimeMinutes(m_baseConnectMinutes + m_userTimer2.elapsed() / 60000);
 }
-
+void MiniApp::onWakeUpNetworkConnectionChanged()
+{
+    if (m_bypassNetworkChange) {
+        LOG_DEBUG(QString::fromUtf8("onNetworkConnectionChanged bypassed"));
+        return;
+    }
+    if (!m_routerMac.isEmpty()) {
+        if (m_disconnectedPrompt || !m_activePage) {
+            if (m_disconnectedPrompt) {
+                LOG_DEBUG(QString::fromUtf8("onWakeUpNetworkConnectionChanged close prompt page"));
+                m_userTimer2.restart();
+                changeUptimeTimer();
+                closePage();
+                m_disconnectedPrompt = false;
+            }
+        } else {
+            LOG_DEBUG(QString::fromUtf8("onWakeUpNetworkConnectionChanged blocked or already shown"));
+        }
+    } else {
+        LOG_DEBUG(QString::fromUtf8("onWakeUpNetworkConnectionChanged but m_routerMac.isEmpty()"));
+    }
+}
+void MiniApp::onSleepNetworkConnectionChanged()
+{
+    if (m_bypassNetworkChange) {
+        LOG_DEBUG(QString::fromUtf8("onNetworkConnectionChanged bypassed"));
+        return;
+    }
+    m_baseConnectMinutes =m_baseConnectMinutes+ m_userTimer2.restart()/60000;
+    if (!m_routerMac.isEmpty()) {
+        if (m_disconnectedPrompt || !m_activePage) {
+            if(!m_disconnectedPrompt)
+            {
+                LOG_DEBUG(QString::fromUtf8("onSleepNetworkConnectionChanged popup prompt page"));
+                m_disconnectedPrompt = true;
+                navigateTo(QString::fromUtf8("DisconnectPrompt"), QVariantMap());
+            }
+        } else {
+            serializeConfig(true);
+            LOG_DEBUG(QString::fromUtf8("onSleepNetworkConnectionChanged blocked or already shown"));
+        }
+    } else {
+        LOG_DEBUG(QString::fromUtf8("onSleepNetworkConnectionChanged but m_routerMac.isEmpty()"));
+    }
+}
 void MiniApp::onNetworkConnectionChanged()
 {
 	if (m_bypassNetworkChange) {
@@ -1148,13 +1195,8 @@ void MiniApp::onNetworkConnectionChanged()
 			} else if (!checkResult && !m_disconnectedPrompt) {
                 LOG_DEBUG(QString::fromUtf8("onNetworkConnectionChanged popup prompt page"));
                 m_disconnectedPrompt = true;
+                m_baseConnectMinutes=0;
 				navigateTo(QString::fromUtf8("DisconnectPrompt"), QVariantMap());
-            }else if(!checkResult && m_disconnectedPrompt)
-            {
-                LOG_DEBUG(QString::fromUtf8("checkResult false disconnectedPrompt true"));
-            }else if(checkResult && !m_disconnectedPrompt)
-            {
-                LOG_DEBUG(QString::fromUtf8("checkResult true disconnectedPrompt false"));
             }
         } else {
             serializeConfig(true);

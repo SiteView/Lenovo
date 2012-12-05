@@ -253,6 +253,10 @@ bool SystemImpl::checkMessage(MSG *msg, long *result)
             LOG_DEBUG(QString::fromUtf8("also notify resume"));
             QMetaObject::invokeMethod(q_ptr(), "systemResumed", Qt::QueuedConnection);
            // bool rMethod= if(rMethod) LOG_DEBUG(QString::fromUtf8("invoke success"));//sleep
+        }else if(msg->wParam == PBT_APMSUSPEND)
+        {
+           LOG_DEBUG(QString::fromUtf8("system Sleep or Hibernate"));
+           QMetaObject::invokeMethod(q_ptr(), "systemSleep", Qt::QueuedConnection);
         }
     }
 	return false;
@@ -702,7 +706,7 @@ bool SystemImpl::checkRouter(const QString& mac)
 	if (dd.length() != 6) {
 		return true;
 	}
-
+    LOG_DEBUG(QString::fromUtf8("mac length  = %1").arg(dd.length()));
 	HMODULE hModule = GetModuleHandleW(L"iphlpapi");
 	if (!hModule) {
 		hModule = LoadLibraryW(L"iphlpapi");
@@ -778,7 +782,7 @@ void QuitDog::dogRun()
 		DWORD dwWait = WaitForMultipleObjects(3, handles, FALSE, INFINITE);
 		switch (dwWait) {
 		case WAIT_OBJECT_0:
-            LOG_DEBUG(QString::fromUtf8("WAIT_OBJECT_0"));
+//            LOG_DEBUG(QString::fromUtf8("WAIT_OBJECT_0"));
 			loopFlag = false;
 			break;
 		case WAIT_OBJECT_0 + 1:
@@ -786,8 +790,8 @@ void QuitDog::dogRun()
 			loopFlag = false;
 			break;
 		case WAIT_OBJECT_0 + 2:
-            LOG_DEBUG(QString::fromUtf8("WAIT_OBJECT_0 + 2"));
-			QMetaObject::invokeMethod(this, "onAddrChanged", Qt::QueuedConnection);
+//            LOG_DEBUG(QString::fromUtf8("WAIT_OBJECT_0 + 2"));
+            QMetaObject::invokeMethod(this, "onAddrChanged", Qt::QueuedConnection);
 			break;
 		default:
             LOG_DEBUG(QString::fromUtf8("default"));
@@ -809,6 +813,7 @@ void QuitDog::setupNetworkChangeNotify()
 void QuitDog::onAddrChanged()
 {
 	DWORD cb;
+     LOG_DEBUG(QString::fromUtf8("onAddrChanged"));
 	GetOverlappedResult(m_handle, &m_overlapped, &cb, TRUE);
 	QMetaObject::invokeMethod(m_system->q_ptr(), "networkConnectionChanged");
 	setupNetworkChangeNotify();
