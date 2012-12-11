@@ -116,6 +116,10 @@ bool System::checkRouter(const QString& mac)
 {
 	return m_impl->checkRouter(mac);
 }
+bool System::checkRouter2(const QString& ssidName)
+{
+    return m_impl->checkRouter2(ssidName);
+}
 
 bool System::wlanServiceActive() const
 {

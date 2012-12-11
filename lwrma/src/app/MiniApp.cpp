@@ -136,6 +136,8 @@ MiniApp::MiniApp(int& argc, char **argv)
 	m_updateReply = NULL;
 	m_baseUptimeMinutes = 0;
     m_baseConnectMinutes=0;
+    m_AddrChangedSwitch=true;
+    m_blocked30s=false;
 	m_disconnectedPrompt = false;
 }
 
@@ -293,7 +295,6 @@ int MiniApp::run()
 		m_mainWnd->menuBar()->hide();
 		system()->markWindow(m_mainWnd);
 	}
-
 	QSize appSize(960, 700);
 
 	QRect rc = desktop()->availableGeometry();
@@ -1092,6 +1093,7 @@ void MiniApp::beginUserMode()
 	//updateUptime();
 	connect(&m_userTimer1, SIGNAL(timeout()), SLOT(changeUptimeTimer()));
 	m_userTimer2.start();
+    m_blockedTimer.start();
 	m_userTimer1.start(1000);
 	checkForUpdate();
 }
@@ -1134,10 +1136,6 @@ void MiniApp::changeUptimeTimer()
 }
 void MiniApp::onWakeUpNetworkConnectionChanged()
 {
-    if (m_bypassNetworkChange) {
-        LOG_DEBUG(QString::fromUtf8("onNetworkConnectionChanged bypassed"));
-        return;
-    }
     if (!m_routerMac.isEmpty()) {
         if (m_disconnectedPrompt || !m_activePage) {
             if (m_disconnectedPrompt) {
@@ -1153,13 +1151,13 @@ void MiniApp::onWakeUpNetworkConnectionChanged()
     } else {
         LOG_DEBUG(QString::fromUtf8("onWakeUpNetworkConnectionChanged but m_routerMac.isEmpty()"));
     }
+    m_AddrChangedSwitch=true;
+    m_blocked30s=true;
+    m_blockedTimer.restart();
 }
+
 void MiniApp::onSleepNetworkConnectionChanged()
 {
-    if (m_bypassNetworkChange) {
-        LOG_DEBUG(QString::fromUtf8("onNetworkConnectionChanged bypassed"));
-        return;
-    }
     m_baseConnectMinutes =m_baseConnectMinutes+ m_userTimer2.restart()/60000;
     if (!m_routerMac.isEmpty()) {
         if (m_disconnectedPrompt || !m_activePage) {
@@ -1167,10 +1165,10 @@ void MiniApp::onSleepNetworkConnectionChanged()
             {
                 LOG_DEBUG(QString::fromUtf8("onSleepNetworkConnectionChanged popup prompt page"));
                 m_disconnectedPrompt = true;
+                m_AddrChangedSwitch=false;
                 navigateTo(QString::fromUtf8("DisconnectPrompt"), QVariantMap());
             }
         } else {
-            serializeConfig(true);
             LOG_DEBUG(QString::fromUtf8("onSleepNetworkConnectionChanged blocked or already shown"));
         }
     } else {
@@ -1183,9 +1181,24 @@ void MiniApp::onNetworkConnectionChanged()
         LOG_DEBUG(QString::fromUtf8("onNetworkConnectionChanged bypassed"));
 		return;
 	}
+    if(!m_AddrChangedSwitch)
+    {
+        return;
+    }
+    if(m_blocked30s)
+    {
+        if(m_blockedTimer.elapsed()<30000)
+        {
+            return;
+        }else
+        {
+            m_blocked30s=false;
+        }
+    }
 	if (!m_routerMac.isEmpty()) {
 		if (m_disconnectedPrompt || !m_activePage) {
-			bool checkResult = system()->checkRouter(m_routerMac);
+//			bool checkResult = system()->checkRouter(m_routerMac);
+            bool checkResult =this->checkRouter2();
 			if (checkResult && m_disconnectedPrompt) {
                 LOG_DEBUG(QString::fromUtf8("onNetworkConnectionChanged close prompt page"));
                 m_userTimer2.restart();
@@ -1197,6 +1210,79 @@ void MiniApp::onNetworkConnectionChanged()
                 m_disconnectedPrompt = true;
                 m_baseConnectMinutes=0;
 				navigateTo(QString::fromUtf8("DisconnectPrompt"), QVariantMap());
+            } else if(checkResult && !m_disconnectedPrompt)
+            {
+                //Sleep(2000);
+                LOG_DEBUG(QString::fromUtf8("checkResult true"));
+//                QElapsedTimer t;
+//                t.start();
+//                while(t.elapsed()<20000)
+//                    QCoreApplication::processEvents();
+//                QList<QHostAddress> list = QNetworkInterface::allAddresses();
+//                bool checkResult1 = system()->checkRouter(m_routerMac);
+//                if(checkResult1)
+//                {
+//                    LOG_DEBUG(QString::fromUtf8("checkResult1 true"));
+//                }else
+//                {
+//                    LOG_DEBUG(QString::fromUtf8("checkResult1 false"));
+//                }
+//                if (list.count()==0)
+//                {
+//                    LOG_DEBUG(QString::fromUtf8("checkResult2 true"));
+//                }
+//                QString hostip;
+//                foreach (QHostAddress address, list)
+//                {
+//                     if(address.protocol() == QAbstractSocket::IPv4Protocol)
+//                     {
+//                         hostip=address.toString();
+//                         if(hostip.compare(QLatin1String("127.0.0.1"), Qt::CaseInsensitive)!=0)
+//                             break;
+//                     }
+//                }
+//                LOG_DEBUG(hostip);
+//                QProcess *connected = new QProcess(0);
+//                QString routeIP=soapCore()->host();
+//                QString arguments;
+//                LOG_DEBUG(routeIP);
+//                arguments =QString::fromUtf8("ping %1 -n 1 -w 1").arg(routeIP);
+//                connected->start(arguments);
+//                int exitCode;
+//                if(!connected->waitForFinished())
+//                {
+//                   exitCode= connected->exitCode();
+//                }else
+//                {
+//                    exitCode=connected->exitCode();
+//                }
+//                LOG_DEBUG(QString::fromUtf8("ExitStatus = %1").arg(exitCode));
+//                 delete connected;
+
+
+//                    QProcess *connected = new QProcess(0);
+//                    QString exec="ping";
+//                    QStringList params;
+//                    params << "-c" << "1" << "http://www.google.com";
+//                    connected->start(exec,params);
+//                    if(!connected->waitForFinished())
+//                        return false;
+//                    cout << "The exit code is " << connected->exitCode() << endl;
+//                    delete connected;
+//                system()->checkRouter2(m_wlanProfileName);
+//                bool checkResult1 = system()->checkRouter(m_routerMac);
+//                if(checkResult1)
+//                {
+//                    LOG_DEBUG(QString::fromUtf8("checkResult1 true"));
+//                }else
+//                {
+//                     LOG_DEBUG(QString::fromUtf8("checkResult1 false"));
+//                }
+
+            } else
+            {
+
+                LOG_DEBUG(QString::fromUtf8("checkResult false"));
             }
         } else {
             serializeConfig(true);
@@ -1206,7 +1292,32 @@ void MiniApp::onNetworkConnectionChanged()
         LOG_DEBUG(QString::fromUtf8("onNetworkConnectionChanged but m_routerMac.isEmpty()"));
     }
 }
-
+bool MiniApp::checkRouter2()
+{
+    QProcess *connected = new QProcess(0);
+    QString routeIP=soapCore()->host();
+    QString arguments;
+    LOG_DEBUG(routeIP);
+    arguments =QString::fromUtf8("ping %1 -n 1 -w 1").arg(routeIP);
+    connected->start(arguments);
+    int exitCode;
+    if(!connected->waitForFinished())
+    {
+       exitCode= connected->exitCode();
+    }else
+    {
+        exitCode=connected->exitCode();
+    }
+    LOG_DEBUG(QString::fromUtf8("ExitStatus = %1").arg(exitCode));
+     delete connected;
+    if(exitCode == 0)
+    {
+        return true;
+    }else
+    {
+        return false;
+    }
+}
 ClientArea::ClientArea()
 {
 	QWidget *layer0 = new QWidget(this);

@@ -18,6 +18,8 @@
 #include <QtGui/QVBoxLayout>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
+#include <QProcess>
+#include <QNetworkInterface>
 
 class AppPage;
 class AppService;
@@ -59,6 +61,7 @@ public:
 	QString wifiPassword() const;
 	void generateWifiName();
 	void confirmWifiName();
+    bool checkRouter2();
 
 	QString versionString() const;
 
@@ -67,13 +70,13 @@ public:
 	void configSet(const QString& name, const QVariant& value);
 	QVariant configGet(const QString& name) const;
 	void setWifiSecurity(bool wifiSecurity);
-	void showMessage(int stringId);
+    void showMessage(int stringId);
 
 	void beginUserMode();
 
 	bool validateWifiPassword(const QString& password) const;
 	void confirmNewWifiPassword(const QString& password);
-	QString savedWifiPassword() const;
+    QString savedWifiPassword() const;
 
 Q_SIGNALS:
 	void incomingBPSChanged();
@@ -177,11 +180,16 @@ private:
 	QByteArray m_updateMd5;
 	QString m_updateVer;
 
-	int m_baseUptimeMinutes;
+    int m_baseUptimeMinutes;
 
     int m_baseConnectMinutes;
+    bool m_AddrChangedSwitch;
 	QTimer m_userTimer1;
 	QElapsedTimer m_userTimer2;
+
+    QElapsedTimer m_blockedTimer;
+    bool m_blocked30s;
+
 
 	QString m_safeWifiPassword;
 };

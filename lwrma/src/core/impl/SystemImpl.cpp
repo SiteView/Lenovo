@@ -710,17 +710,20 @@ bool SystemImpl::checkRouter(const QString& mac)
 	HMODULE hModule = GetModuleHandleW(L"iphlpapi");
 	if (!hModule) {
 		hModule = LoadLibraryW(L"iphlpapi");
+        LOG_DEBUG(QString::fromUtf8("LoadLibraryW  iphlpapi"));
 		return true;
 	}
 
 	typedef DWORD (WINAPI *PFN_GetIpNetTable)(PMIB_IPNETTABLE, PULONG, BOOL);
 	PFN_GetIpNetTable pfnGetIpNetTable = reinterpret_cast<PFN_GetIpNetTable>(GetProcAddress(hModule, "GetIpNetTable"));
 	if (!pfnGetIpNetTable) {
+        LOG_DEBUG(QString::fromUtf8("no pfnGetIpNetTable"));
 		return true;
 	}
 
 	QVector<uchar> buffer(2048);
 	PMIB_IPNETTABLE pNetTable = reinterpret_cast<PMIB_IPNETTABLE>(&buffer[0]);
+
 
 	DWORD cb = buffer.size();
 	DWORD err = (*pfnGetIpNetTable)(pNetTable, &cb, TRUE);
@@ -729,12 +732,16 @@ bool SystemImpl::checkRouter(const QString& mac)
 		pNetTable = reinterpret_cast<PMIB_IPNETTABLE>(&buffer[0]);
 		err = (*pfnGetIpNetTable)(pNetTable, &cb, TRUE);
 	}
-
 	if (err != ERROR_SUCCESS) {
+        LOG_DEBUG(QString::fromUtf8("pNetTables Error"));
 		return true;
 	}
-
-	for (DWORD i = 0; i < pNetTable->dwNumEntries; i++) {
+    //in_addr ia;
+    //ia.S_un.S_addr = row->dwAddr;
+    //QString ss=QString(QLatin1String(inet_ntoa(ia)));
+    //LOG_DEBUG(QString::fromUtf8("no pfnGetIpNetTable= %1 ").arg(ss));
+    //delete pNetTable;
+    for (DWORD i = 0; i < pNetTable->dwNumEntries; i++) {
 		MIB_IPNETROW *row = pNetTable->table + i;
 		if (row->dwPhysAddrLen == 6 && memcmp(row->bPhysAddr, dd.data(), 6) == 0) {
 			return true;
@@ -742,6 +749,51 @@ bool SystemImpl::checkRouter(const QString& mac)
 	}
 	return false;
 }
+bool SystemImpl::checkRouter2(const QString& ssidName)
+{
+
+       WlanLib *wlanapi = this->m_wlanapi;
+       DWORD err;
+       DWORD ver;
+       HANDLE wlanHandle = NULL;
+       PWLAN_INTERFACE_INFO_LIST intfList = NULL;
+       PWLAN_CONNECTION_ATTRIBUTES connInfo = NULL;
+       err = wlanapi->WlanOpenHandle(1, NULL, &ver, &wlanHandle);
+       if (err != ERROR_SUCCESS) {
+           return false;
+         }
+       err = wlanapi->WlanEnumInterfaces(wlanHandle, NULL, &intfList);
+       if (err != ERROR_SUCCESS)
+       {
+            return false;
+       }
+       if(intfList->dwNumberOfItems==0)
+       {
+           return false;
+       }
+       //DWORD index = m_system->selectBestInterface(intfList);
+       const GUID *intfGuid = &intfList->InterfaceInfo[0].InterfaceGuid;
+       DWORD cb;
+       WLAN_OPCODE_VALUE_TYPE valueType;
+       err = wlanapi->WlanQueryInterface(wlanHandle, intfGuid, wlan_intf_opcode_current_connection, NULL, &cb, reinterpret_cast<PVOID*>(&connInfo), &valueType);
+       if(err == ERROR_SUCCESS)
+       {
+          if (connInfo->isState == wlan_interface_state_connected && connInfo->wlanConnectionMode == wlan_connection_mode_profile)
+          {
+              QString SsidName=ssidName;
+              LOG_DEBUG(QString::fromUtf8("ssidName = %1").arg(SsidName));
+              LOG_DEBUG(QString::fromUtf8("ssidName = %1").arg(QString::fromWCharArray(connInfo->strProfileName)));
+              if(SsidName.compare(QString::fromWCharArray(connInfo->strProfileName))==0)
+              {
+                  LOG_DEBUG(QString::fromUtf8("ssidName = %1").arg(SsidName));
+                  return true;
+              }
+          }
+       }
+
+       return false;
+}
+
 
 QuitDog::QuitDog(SystemImpl *system, const WCHAR *eventName)
 	: m_system(system), m_thread(this)
@@ -810,8 +862,56 @@ void QuitDog::setupNetworkChangeNotify()
 	}
 }
 
+bool QuitDog::wlanConnectedStatus()
+{
+    WlanLib *wlanapi = m_system->m_wlanapi;
+    DWORD err;
+    DWORD ver;
+    HANDLE wlanHandle = NULL;
+    PWLAN_INTERFACE_INFO_LIST intfList = NULL;
+    PWLAN_CONNECTION_ATTRIBUTES connInfo = NULL;
+    err = wlanapi->WlanOpenHandle(1, NULL, &ver, &wlanHandle);
+    if (err != ERROR_SUCCESS) {
+        return false;
+      }
+    err = wlanapi->WlanEnumInterfaces(wlanHandle, NULL, &intfList);
+    if (err != ERROR_SUCCESS)
+    {
+         return false;
+    }
+    if(intfList->dwNumberOfItems==0)
+    {
+        return false;
+    }
+    DWORD index = m_system->selectBestInterface(intfList);
+    const GUID *intfGuid = &intfList->InterfaceInfo[index].InterfaceGuid;
+    DWORD cb;
+    WLAN_OPCODE_VALUE_TYPE valueType;
+    err = wlanapi->WlanQueryInterface(wlanHandle, intfGuid, wlan_intf_opcode_current_connection, NULL, &cb, reinterpret_cast<PVOID*>(&connInfo), &valueType);
+    if(err == ERROR_SUCCESS)
+    {
+       if (connInfo->isState == wlan_interface_state_connected && connInfo->wlanConnectionMode == wlan_connection_mode_profile)
+       {
+           QString ssidName=m_system->m_wlanSsid;
+           LOG_DEBUG(QString::fromUtf8("ssidName = %1").arg(ssidName));
+           LOG_DEBUG(QString::fromUtf8("ssidName = %1").arg(QString::fromWCharArray(connInfo->strProfileName)));
+           if(ssidName.compare(QString::fromWCharArray(connInfo->strProfileName))==0)
+           {
+               LOG_DEBUG(QString::fromUtf8("ssidName = %1").arg(ssidName));
+               return true;
+           }
+       }
+    }
+
+    return false;
+}
+
 void QuitDog::onAddrChanged()
 {
+//    if(wlanConnectedStatus())
+//    {
+//        return;
+//    }
 	DWORD cb;
      LOG_DEBUG(QString::fromUtf8("onAddrChanged"));
 	GetOverlappedResult(m_handle, &m_overlapped, &cb, TRUE);
@@ -1748,10 +1848,10 @@ int ConnectProfileOp::process(QVariantMap& result)
 		}
 
 		setValue("profileName", QString::fromWCharArray(connInfo->strProfileName));
+        m_system->m_wlanSsid=QString::fromWCharArray(connInfo->strProfileName);
 		setValue("ssid", QString::fromUtf8(reinterpret_cast<const char*>(connInfo->wlanAssociationAttributes.dot11Ssid.ucSSID), connInfo->wlanAssociationAttributes.dot11Ssid.uSSIDLength));
 		setValue("mac", QByteArray(reinterpret_cast<const char*>(connInfo->wlanAssociationAttributes.dot11Bssid), 6));
 		setValue("securityEnabled", connInfo->wlanSecurityAttributes.bSecurityEnabled ? true : false);
-
         status = NoError;
 	} while (false);
 

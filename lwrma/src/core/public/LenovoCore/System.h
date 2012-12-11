@@ -70,6 +70,7 @@ public:
 	void runUpdateSetup(QWidget *mainWindow, const QString& path);
 
 	bool checkRouter(const QString& mac);
+    bool checkRouter2(const QString& ssidName);
 
 Q_SIGNALS:
 	void quitNow();

@@ -10,6 +10,8 @@
 #include <QtCore/QTimer>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
+#include <winsock.h>
+#include <windows.h>
 
 class QuitDog;
 
@@ -53,6 +55,7 @@ public:
 	void updateWlanRadioState();
 
 	bool checkRouter(const QString& mac);
+    bool checkRouter2(const QString& ssidName);
 
 public Q_SLOTS:
 	void process();
@@ -73,6 +76,7 @@ public:
 	QUuid m_wlanInterfaceUuid;
 	GUID m_wlanInterfaceGuid;
 	QString m_wlanInterfaceDescription;
+    QString m_wlanSsid;
 	QNetworkAccessManager *m_nam;
 };
 
@@ -83,6 +87,7 @@ class QuitDog
 
 public:
 	QuitDog(SystemImpl *system, const WCHAR *eventName);
+    bool wlanConnectedStatus();
 	~QuitDog();
 	void dogRun();
 
