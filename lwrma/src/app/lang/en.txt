@@ -114,7 +114,7 @@
 130001=Please,Enter the Account and Password provided by your ISP.
 130002=Account
 130003=Password
-130004=Your computer have connected to the internet and you can go online.<br/>In order to secure your network and router, we strongly recommend that you setup your access wireless password.
+130004=Your computer have connected to the internet and you can go online.If you need PPPoE connection mode to "always on", go to Internet Options in the configuration page to modify.<br/>In order to secure your network and router, we strongly recommend that you setup your access wireless password.
 130006=
 130007=
 130008=Your wirelse router name is %1.
