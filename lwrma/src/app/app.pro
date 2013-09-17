@@ -11,7 +11,7 @@ else:build_pass: {
 }
 TEMPLATE = app
 TARGET = lwrma
-RESOURCES = app.qrc
+RESOURCES = app.qrc 
 QMAKE_RESOURCE_FLAGS += -threshold 0 -compress 9
 CONFIG += precompile_header \
     uitools
@@ -59,7 +59,10 @@ win32:{
 
 win32-msvc*: { 
     DEFINES += DEV_SRC_ROOT=\"$$PWD\"
-    LIBS += $$VAR_PUBLIC_LIB_DIR/LenovoCore.lib
+    LIBS += $$VAR_PUBLIC_LIB_DIR/LenovoCore.lib \
+	         -lAdvapi32 \
+			 -lUser32 \
+			 -lShell32
 }
 win32-g++*: { 
     DEFINES += DEV_SRC_ROOT=\\\"$$PWD\\\"
