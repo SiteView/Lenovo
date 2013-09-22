@@ -1185,9 +1185,10 @@ void DiscoverRouterSoapOp::process()
 		varMap.insert(QLatin1String("soapHostName"), hostName);
 		QString mac = varMap.value(QLatin1String("newwlanmacaddress")).toString().toUpper();
 		fullList.push_back(varMap);
-		if (!m_mac.isNull() && mac.compare(m_mac, Qt::CaseInsensitive) == 0) {
-			matchIndex = i;
-		}
+		m_mac = mac;
+		//if (!m_mac.isNull() && mac.compare(m_mac, Qt::CaseInsensitive) == 0) {
+		matchIndex = i;
+		//}
 		LOG_DEBUG(QString::fromUtf8("%1 [%2]").arg(hostName).arg(mac));
 	}
 

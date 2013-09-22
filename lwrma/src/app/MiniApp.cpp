@@ -115,8 +115,8 @@ static const QString UPDATE_URL_TEMPLATE = QLatin1String("http://updates1.netgea
 MiniApp::MiniApp(int& argc, char **argv)
 	: QApplication(argc, argv), m_incomingBPS(0), m_outgoingBPS(0), m_uptimeMinutes(0), m_wifiSecurity(false)
 {
-	QString u2 = guardPassword(QLatin1String("siteviewtest"), true);
-	QString u3 = guardPassword(u2, false);
+	//QString u2 = guardPassword(QLatin1String("siteviewtest"), true);
+	//QString u3 = guardPassword(u2, false);
     //setOrganizationName(QLatin1String("Lenovo"));
 	setOrganizationDomain(QLatin1String("lenovo.com"));
     //setApplicationName(QLatin1String("Wireless Router Manage Assistant"));

@@ -897,7 +897,7 @@ void UIWanSave::onConfigFinished()
 
 	LOG_DEBUG(QString::fromUtf8("Delay for apply"));
 	m_timer1.setSingleShot(true);
-	m_timer1.start(5000);
+	m_timer1.start(1000);
 	connect(&m_timer1, SIGNAL(timeout()), SLOT(onTimeout1()));
 }
 
@@ -908,6 +908,9 @@ void UIWanSave::onTimeout1()
 
 	m_op = app()->bean()->restartRouter();
 	connect(m_op, SIGNAL(finished()), SLOT(onRestartRouterFinished()));
+	// zhouklansman 减少一次重启 
+	//m_op = app()->bean()->reconnectRouter(3000, 10, g_targetMac, g_lanMode ? QString() : app()->wifiName(), true);
+	//connect(m_op, SIGNAL(finished()), SLOT(onReconnectFinished()));
 }
 
 void UIWanSave::onRestartRouterFinished()
@@ -923,17 +926,15 @@ void UIWanSave::onRestartRouterFinished()
 		app()->navigateTo(QString::fromUtf8("CallHelp"));
 		return;
 	}
-
 	LOG_DEBUG(QString::fromUtf8("Delay for restart"));
 	m_timer1.setSingleShot(true);
-	m_timer1.start(20000);
+	m_timer1.start(1000);
 	connect(&m_timer1, SIGNAL(timeout()), SLOT(onTimeout2()));
 }
 
 void UIWanSave::onTimeout2()
 {
 	disconnect(&m_timer1, SIGNAL(timeout()), this, SLOT(onTimeout2()));
-
 	LOG_DEBUG(QString::fromUtf8("reconnectRouter start"));
 	m_op = app()->bean()->reconnectRouter(3000, 10, g_targetMac, g_lanMode ? QString() : app()->wifiName(), true);
 	connect(m_op, SIGNAL(finished()), SLOT(onReconnectFinished()));
