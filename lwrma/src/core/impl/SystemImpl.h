@@ -210,6 +210,7 @@ protected:
 private:
 	SystemImpl *m_system;
 	QString m_ssid;
+	int m_tryCount;
 };
 
 class ConnectSsidOp

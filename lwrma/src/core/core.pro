@@ -15,7 +15,7 @@ TEMPLATE = lib
 TARGET = LenovoCore
 CONFIG += precompile_header staticlib
 PRECOMPILED_HEADER = impl/pch.h
-QT += network
+QT += network test
 
 INCLUDEPATH += $$VAR_DEVEL_ROOT_DIR/src/core/public \
 	./

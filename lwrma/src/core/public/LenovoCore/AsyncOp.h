@@ -14,7 +14,7 @@ class LENOVOCORE_API AsyncOp
 public:
 	enum Status
 	{
-		NoError = 0,
+		NoError = 0,		
 		UnknownError = -1,
 		AbortedError,
 		NetworkError = -4000,
@@ -27,6 +27,8 @@ public:
 		WlanProfileNotFound,
 		InvalidWifiPasswordError,
 		InvalidAdminPasswordError,
+		NOFound,
+
 	};
 
 	virtual ~AsyncOp();

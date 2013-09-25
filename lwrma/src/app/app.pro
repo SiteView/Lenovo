@@ -16,7 +16,7 @@ QMAKE_RESOURCE_FLAGS += -threshold 0 -compress 9
 CONFIG += precompile_header \
     uitools
 PRECOMPILED_HEADER = pch.h
-QT += network
+QT += network test
 INCLUDEPATH += $$VAR_DEVEL_ROOT_DIR/src/core/public \
 	./
 DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII LENOVOCORE_STATICLIB
@@ -62,7 +62,8 @@ win32-msvc*: {
     LIBS += $$VAR_PUBLIC_LIB_DIR/LenovoCore.lib \
 	         -lAdvapi32 \
 			 -lUser32 \
-			 -lShell32
+			 -lShell32 \
+			 -lQtTest4
 }
 win32-g++*: { 
     DEFINES += DEV_SRC_ROOT=\\\"$$PWD\\\"

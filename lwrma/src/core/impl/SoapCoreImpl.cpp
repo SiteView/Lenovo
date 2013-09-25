@@ -345,6 +345,7 @@ WrappedSoapOp::~WrappedSoapOp()
 void WrappedSoapOp::start()
 {
 	m_op = m_core->invokeFallback(QLatin1String("urn:NETGEAR-ROUTER:service:DeviceConfig:1"), QLatin1String("ConfigurationStarted"), QStringList(QLatin1String("NewSessionID")), QStringList(m_core->sessionId()), m_host);
+	LOG_DEBUG(QString::fromUtf8("ConfigurationStarted ssid: %1").arg(m_core->sessionId()));
 	connect(m_op, SIGNAL(finished()), SLOT(onSoap1Finished()));
 }
 
