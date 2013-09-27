@@ -122,3 +122,6 @@
 130010=Wireless Password
 130011=Confirm Password
 130012=Your computer have successed to connect the internet,your router name is %1.Please keep your broadband counter and wireless access password.
+
+140000=wirelse router name
+140001=wireless password

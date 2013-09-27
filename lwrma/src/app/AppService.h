@@ -31,6 +31,8 @@ public:
 	void setWifiPassword(const QString& wifiPassword);
 	QString wifiPassword() const;
 	void generateWifiName();
+	void SetWifiName(QString WifiName);
+
 	void confirmWifiName();
 	void setWifiSecurity(bool wifiSecurity);
 	void confirmNewWifiPassword(const QString& password);

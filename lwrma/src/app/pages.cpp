@@ -12,7 +12,12 @@ bool g_lanMode;
 QString g_targetMac;
 
 // 全局无线连接对象名
-QLatin1String g_targetSSID("lenovo_new");
+
+static const QString g_targetSSID(QString::fromLocal8Bit("lenovo_new"));
+
+QString g_CurrentSSID(QString::fromLocal8Bit("CurrentSSID"));;
+
+QString g_NewSSID;
 
 
 bool checkSoapResponse(AsyncOp *op, int& responseCode)
@@ -226,6 +231,10 @@ void UINewRouterConfirm::onYesButtonClicked()
     QVariantMap params1;
     params1.insert(QLatin1String("mode"), 1);
     app()->navigateTo(QString::fromUtf8("RouterSetupWelcome"), params1);
+
+
+
+
 }
 
 void UINewRouterConfirm::onNoButtonClicked()
@@ -306,9 +315,8 @@ void UIRouterSetupWelcome::keyPressEvent(QKeyEvent *e)
 
 void UIRouterSetupWelcome::onNextButtonClicked()
 {
-    app()->configSet(QLatin1String("WlanProfileName"), QString());
-    app()->configSet(QLatin1String("RouterMac"), QString());
-    app()->navigateTo(QString::fromUtf8("RouterSetupDetect"));
+    app()->navigateTo(QString::fromUtf8("SetSSID"), QVariantMap());
+
 }
 
 void UIRouterSetupWelcome::onBackButtonClicked()
@@ -386,20 +394,20 @@ void UIRouterSetupDetect::onSearchSsidFinished()
     LOG_DEBUG(QString::fromUtf8("searchSsid result: %1").arg(result));
     switch (result)
     {
-	case  AsyncOp::NOFound:
-	{
-		if(m_retryCount<4)
-		{
-		   //QTest::qSleep(5000);
-		   searchSsid();
-		   m_retryCount++;
-		   break;
-		}
-		else
-		{
-		 m_retryCount = 0;
-		}
-	}
+    case  AsyncOp::NOFound:
+    {
+        if(m_retryCount<4)
+        {
+            //QTest::qSleep(5000);
+            searchSsid();
+            m_retryCount++;
+            break;
+        }
+        else
+        {
+            m_retryCount = 0;
+        }
+    }
     case AsyncOp::NoError:
     {
         QVariant varSsidList = op->value("ssidList");
@@ -485,7 +493,7 @@ void UIRouterSetupDetect::onSearchSsidFinished()
     }
 }
 
-// 
+//
 void UIRouterSetupDetect::connectSsid()
 {
     m_op = app()->system()->connectSsid(m_ssid);
@@ -597,7 +605,6 @@ void UIRouterSetupDetect::onDiscoveryLanFinished()
     AsyncOp *op = m_op;
     m_op->deleteLater();
     m_op = NULL;
-
     if (op->isAborted())
     {
         LOG_DEBUG(QString::fromUtf8("aborted, need some help?"));
@@ -661,7 +668,8 @@ void UIRouterSetupDetect::lockDownRouter(bool lan, const QString& mac, const QSt
     g_lanMode = lan;
     g_targetMac = mac;
     app()->bean()->soapCore()->setHost(host);
-    app()->generateWifiName();
+    //  app()->generateWifiName();
+    app()->SetWifiName(g_NewSSID); // 不再自动产生SSID
     app()->configSet(QLatin1String("WlanProfileName"), app()->wifiName());
     app()->configSet(QLatin1String("RouterMac"), g_targetMac);
     m_retryCount = 0;
@@ -1019,7 +1027,7 @@ void UIWanSave::onConfigFinished()
 
     LOG_DEBUG(QString::fromUtf8("Delay for apply"));
     m_timer1.setSingleShot(true);
-    m_timer1.start(1000);
+    m_timer1.start(10000);
     connect(&m_timer1, SIGNAL(timeout()), SLOT(onTimeout1()));
 }
 
@@ -1048,7 +1056,7 @@ void UIWanSave::onRestartRouterFinished()
     }
     LOG_DEBUG(QString::fromUtf8("Delay for restart"));
     m_timer1.setSingleShot(true);
-    m_timer1.start(1000);
+    m_timer1.start(10000);
     connect(&m_timer1, SIGNAL(timeout()), SLOT(onTimeout2()));
 }
 
@@ -1371,6 +1379,7 @@ void UIRouterPowerGuide1::onLoad(const QVariantMap& params)
 {
     QAbstractButton *nextButton = findChild<QAbstractButton*>(QString::fromUtf8("nextButton"));
     connect(nextButton, SIGNAL(clicked()), SLOT(onNextButtonClicked()));
+
 }
 
 void UIRouterPowerGuide1::onNextButtonClicked()
@@ -1407,9 +1416,84 @@ void UIRouterPowerGuide2::onNextButtonClicked()
     app()->navigateTo(QString::fromUtf8("RouterSetupDetect"), params1);
 }
 
+void UISetSSID::onLoad(const QVariantMap& params)
+{
+    m_promptLabel = findChild<QLabel*>(QString::fromUtf8("promptLabel"));
+	m_modLabel = findChild<QLabel*>(QString::fromUtf8("promptLabel_2")); 
+	m_SSIDNewName = findChild<QLineEdit*>(QString::fromUtf8("lineEdit"));
+    QAbstractButton *nextButton = findChild<QAbstractButton*>(QString::fromUtf8("nextButton"));
+    connect(nextButton, SIGNAL(clicked()), SLOT(onNextButtonClicked()));
+	m_SSIDNewName->setText(g_targetSSID);
+}
+void UISetSSID::onComboxChanged(QString &newName)
+{
+	m_SSIDNewName->setText(newName);
+}
+void UISetSSID::onNextButtonClicked()
+{
+    app()->configSet(QLatin1String("WlanProfileName"), QString());
+    app()->configSet(QLatin1String("RouterMac"), QString());
+    app()->navigateTo(QString::fromUtf8("RouterSetupDetect"));
+	QString newname = m_SSIDNewName->text();
+	if (newname.compare(QString::fromLocal8Bit(""))!=0)
+		g_NewSSID = newname;
+}
+
+void UISetSSID::onTranslate()
+{
+    m_promptLabel->setText(QString::fromLocal8Bit("请确认您的调制解调器已连接好且通电，配置过程中可以修改无线路由名称。"));
+	m_modLabel->setText(QString::fromLocal8Bit("新无线路由名称"));
+}
+
+
+void UIReConnectWifi::onLoad(const QVariantMap& params)
+{
+    m_promptLabel = findChild<QLabel*>(QString::fromUtf8("promptLabel"));
+	m_SSIDLabel = findChild<QLabel*>(QString::fromUtf8("promptLabel_3")); 
+	m_PWDLabel = findChild<QLabel*>(QString::fromUtf8("promptLabel_2")); 
+    m_SSIDEdit = findChild<QLineEdit*>(QString::fromUtf8("SSIDEditor"));
+	m_PasswordEdit = findChild<QLineEdit*>(QString::fromUtf8("lineEdit"));
+    m_SSIDList = findChild<QComboBox*>(QString::fromUtf8("SSIDcomboBox"));
+    m_SSIDList->setLineEdit(m_SSIDEdit);
+	m_SSIDList->setVisible(true);
+	m_SSIDEdit->setVisible(true);
+    QAbstractButton *nextButton = findChild<QAbstractButton*>(QString::fromUtf8("nextButton"));
+    connect(nextButton, SIGNAL(clicked()), SLOT(onNextButtonClicked()));
+    m_SSIDList->addItem(QString::fromLatin1("lenovo_1230"),QVariant(QString::fromLatin1("lenovo_1230")));
+    m_SSIDList->addItem(QString::fromLatin1("lenovo_0805"),QVariant(QString::fromLatin1("lenovo_0805")));
+    m_SSIDList->addItem(QString::fromLatin1("lenovo_0815"),QVariant(QString::fromLatin1("lenovo_0815")));
+    m_SSIDList->addItem(QString::fromLatin1("lenovo_0845"),QVariant(QString::fromLatin1("lenovo_0845")));
+    m_SSIDList->addItem(QString::fromLatin1("lenovo_0865"),QVariant(QString::fromLatin1("lenovo_0865")));
+    m_SSIDList->addItem(QString::fromLatin1("lenovo_new"),QVariant(QString::fromLatin1("lenovo_new")));
+	connect(m_SSIDList,SIGNAL(currentIndexChanged(const QString&)),this,SLOT(onComboxChanged(const QString&)));
+	//m_SSIDNewName->setText(g_targetSSID);
+}
+void UIReConnectWifi::onComboxChanged(QString &newName)
+{
+	//m_SSIDNewName->setText(newName);
+}
+void UIReConnectWifi::onNextButtonClicked()
+{
+	QVariantMap params1;
+	params1.insert(QString::fromUtf8("ssid"), m_SSIDEdit->text());
+	params1.insert(QString::fromUtf8("password"), m_PasswordEdit->text());
+	app()->navigateTo(QString::fromUtf8("RouterDetect"), params1);
+}
+
+void UIReConnectWifi::onTranslate()
+{
+	m_SSIDList->setVisible(true);
+	m_SSIDEdit->setVisible(true);
+	m_promptLabel->setText(QString::fromLocal8Bit("无法找到路由器，请手动输入无线连接。"));
+	m_SSIDLabel->setText(QString::fromLocal8Bit("无线路由名称"));
+	m_PWDLabel->setText(QString::fromLocal8Bit("无线访问密码"));
+}
+
+
 /*
 ** UICallHelp
 */
+
 
 void UICallHelp::onLoad(const QVariantMap& params)
 {
@@ -1461,11 +1545,20 @@ void UIDisconnectPrompt::onLoad(const QVariantMap& params)
     m_reconnectButton = findChild<QAbstractButton*>(QString::fromUtf8("reconnectButton"));
     m_loadingLabel = findChild<QLabel*>(QString::fromUtf8("loadingLabel"));
     m_promptLabel = findChild<QLabel*>(QString::fromUtf8("promptLabel"));
+	m_SSIDLabel = findChild<QLabel*>(QString::fromUtf8("promptLabel_2"));
+	m_PWDLabel = findChild<QLabel*>(QString::fromUtf8("promptLabel_3"));
+
     connect(m_quitButton, SIGNAL(clicked()), app(), SLOT(quit()));
     connect(m_reconnectButton, SIGNAL(clicked()), SLOT(onReconnectButtonClicked()));
     QMovie *circleMovie = new QMovie(QString::fromUtf8(":/images/loading.gif"), "gif", m_loadingLabel);
     m_loadingLabel->setMovie(circleMovie);
     m_loadingLabel->setVisible(false);
+	m_SSIDEdit = findChild<QLineEdit*>(QString::fromUtf8("SSIDEdit"));
+	m_PasswordEdit = findChild<QLineEdit*>(QString::fromUtf8("PasswordEdit"));
+	m_PasswordEdit->setVisible(false);
+	m_SSIDEdit->setVisible(false);
+	m_SSIDLabel->setVisible(false);
+	m_PWDLabel->setVisible(false);
     m_promptId = 110015;
 }
 
@@ -1487,22 +1580,32 @@ void UIDisconnectPrompt::onTranslate()
 
 void UIDisconnectPrompt::onReconnectButtonClicked()
 {
-    if (!m_op)
+   	QString connectWifiName = m_SSIDEdit->text();
+	// g_targetSSID = m_SSIDEdit->text();
+	m_PasswordEdit->hide();
+	m_SSIDEdit->hide();
+	if (!m_op)
     {
         m_op = app()->system()->connectWlanProfile(app()->wifiName(), false);
         connect(m_op, SIGNAL(finished()), SLOT(onConnectFinished()));
         m_quitButton->setVisible(false);
         m_reconnectButton->setVisible(false);
         m_loadingLabel->setVisible(true);
+		m_PasswordEdit->setVisible(false);
+		m_SSIDEdit->setVisible(false);
+		m_SSIDLabel->setVisible(false);
+		m_PWDLabel->setVisible(false);
         m_loadingLabel->movie()->start();
         m_promptId = 110016;
         onTranslate();
     }
+
 }
 
 void UIDisconnectPrompt::onConnectFinished()
 {
-    AsyncOp *op = m_op;
+
+	AsyncOp *op = m_op;
     m_op->deleteLater();
     m_op = NULL;
     if (op->result() != AsyncOp::NoError)
@@ -1510,10 +1613,15 @@ void UIDisconnectPrompt::onConnectFinished()
         m_quitButton->setVisible(true);
         m_reconnectButton->setVisible(true);
         m_loadingLabel->setVisible(false);
-        m_loadingLabel->movie()->stop();
+		//m_PasswordEdit->setVisible(true);
+		//m_SSIDEdit->setVisible(true);;
+		//m_SSIDLabel->setVisible(true);
+		//m_PWDLabel->setVisible(true);
+        //m_loadingLabel->movie()->stop();
         m_promptId = 110017;
         onTranslate();
     }
+
 }
 
 void UIDisconnectPrompt::onUnload()
@@ -1689,7 +1797,6 @@ void UIRouterWlanSecurity::updateUIState()
     bool passwordValid = false;
     if (m_passwordEdit1->text() == m_passwordEdit2->text())
     {
-        //passwordValid = app()->validateWifiPassword(m_passwordEdit1->text());
         passwordValid = true;
     }
     m_okButton->setEnabled(passwordValid);
@@ -1858,9 +1965,10 @@ void UIRouterDetect::onDiscoveryFinished()
     if (matchIndex >= 0)
     {
         g_targetMac = params().value(QString::fromUtf8("mac")).toString();
-        QVariantMap varMap = op->value("fullList").toList().at(matchIndex).toMap();
+	    QVariantMap varMap = op->value("fullList").toList().at(matchIndex).toMap();
         app()->configSet(QLatin1String("WlanProfileName"), varMap.value(QLatin1String("newssid")).toString());
         app()->confirmWifiName();
+		g_CurrentSSID = varMap.value(QLatin1String("newssid")).toString();
         QString wpaMode = varMap.value(QLatin1String("newwpaencryptionmodes")).toString();
         if (wpaMode.compare(QLatin1String("none"), Qt::CaseInsensitive) == 0)
         {
@@ -1999,9 +2107,7 @@ void UIRouterDetectResult::onTranslate()
 
 void UIRouterDetectResult::onYesButtonClicked()
 {
-    QVariantMap params1;
-    params1.insert(QString::fromUtf8("stage2"), g_targetMac);
-    app()->navigateTo(QString::fromUtf8("RouterPowerGuide1"), params1);
+   	app()->navigateTo(QString::fromUtf8("ReConnectWifi"));
 }
 
 void UIRouterDetectResult::onNoButtonClicked()
@@ -2059,6 +2165,9 @@ APP_REGISTER_PAGE(UILanSetupConnectPC)
 APP_REGISTER_PAGE(UIWlanServiceGuide)
 APP_REGISTER_PAGE(UIWlanMultipleRouterSelect)
 APP_REGISTER_PAGE(UICallHelp)
+APP_REGISTER_PAGE(UISetSSID)
+APP_REGISTER_PAGE(UIReConnectWifi)
+
 APP_REGISTER_PAGE(UIRouterDetect)
 APP_REGISTER_PAGE(UIRouterDetectResult)
 //APP_REGISTER_PAGE(UIRouterDetectFailure)

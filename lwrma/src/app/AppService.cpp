@@ -97,8 +97,12 @@ QString AppService::wifiPassword() const
 
 void AppService::generateWifiName()
 {
-	m_app->generateWifiName();
+	//m_app->generateWifiName();
 }
+void AppService::SetWifiName(QString WifiName)
+{
+	m_app->setWifiName(WifiName);
+};
 
 void AppService::confirmWifiName()
 {

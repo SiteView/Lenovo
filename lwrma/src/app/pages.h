@@ -9,6 +9,7 @@
 #include <QtGui/QListWidget>
 #include <QtGui/QPushButton>
 #include <QtGui/QTextEdit>
+#include <QtGui/QComboBox>
 
 class UIAppWait
 	: public AppPage
@@ -266,6 +267,46 @@ private Q_SLOTS:
 	void onNextButtonClicked();
 };
 
+class UISetSSID : public AppPage
+{
+	Q_OBJECT
+protected:
+	virtual void onLoad(const QVariantMap& params);
+	virtual void onTranslate();
+private Q_SLOTS:
+		void onComboxChanged(QString &name);
+		void onNextButtonClicked();
+private:
+	QPointer<QAbstractButton> m_quitButton;
+	QPointer<QLabel> m_promptLabel;
+	QPointer<QLabel> m_modLabel;
+//	QPointer<QLineEdit> m_SSIDEdit;
+	QPointer<QLineEdit> m_SSIDNewName;
+//	QPointer<QComboBox> m_SSIDList;
+
+};
+
+class UIReConnectWifi: public AppPage
+{
+	Q_OBJECT
+protected:
+	virtual void onLoad(const QVariantMap& params);
+	virtual void onTranslate();
+	private Q_SLOTS:
+		void onComboxChanged(QString &name);
+		void onNextButtonClicked();
+private:
+	QPointer<QAbstractButton> m_quitButton;
+	QPointer<QLabel> m_promptLabel;
+	QPointer<QLabel> m_SSIDLabel;
+	QPointer<QLabel> m_PWDLabel;
+	QPointer<QLineEdit> m_SSIDEdit;
+	QPointer<QComboBox> m_SSIDList;
+	QPointer<QLineEdit> m_PasswordEdit;
+
+
+};
+
 class UICallHelp
 	: public AppPage
 {
@@ -304,6 +345,10 @@ private:
 	QPointer<QAbstractButton> m_reconnectButton;
 	QPointer<QLabel> m_loadingLabel;
 	QPointer<QLabel> m_promptLabel;
+	QPointer<QLabel> m_SSIDLabel;
+	QPointer<QLabel> m_PWDLabel;
+	QPointer<QLineEdit> m_SSIDEdit;
+	QPointer<QLineEdit> m_PasswordEdit;
 	int m_promptId;
 };
 

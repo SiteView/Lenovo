@@ -213,6 +213,22 @@ private:
 	int m_tryCount;
 };
 
+class SearchSsidListOp
+	: public ThreadedAsyncOp
+{
+	Q_OBJECT
+
+public:
+	SearchSsidListOp(SystemImpl *system);
+
+protected:
+	virtual void onAbort();
+	virtual int process(QVariantMap& result);
+
+private:
+	SystemImpl *m_system;
+};
+
 class ConnectSsidOp
 	: public ThreadedAsyncOp
 {

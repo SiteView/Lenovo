@@ -1455,7 +1455,7 @@ void ReconnectRouterOp::retry()
 {
     if (++m_retryCount <= m_maxRetryCount)
     {
-        LOG_DEBUG(QString::fromUtf8("retry %1/%2 after delay %3").arg(m_retryCount).arg(m_maxRetryCount).arg(m_delay));
+        LOG_DEBUG(QString::fromUtf8("retry %1/%2 after delay %3").arg(m_retryCount).arg(m_maxRetryCount).arg(m_delay+3000));
         m_timer1.start();
     }
     else

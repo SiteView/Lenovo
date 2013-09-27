@@ -78,6 +78,8 @@ public:
 	void confirmNewWifiPassword(const QString& password);
     QString savedWifiPassword() const;
 
+	void setWifiName(const QString& wifiName);
+
 Q_SIGNALS:
 	void incomingBPSChanged();
 	void outgoingBPSChanged();
@@ -124,7 +126,6 @@ private:
 	void collectNetworkPerf();
 	void restoreFromTray();
 	AppPage *loadPage(const QString& pageName, const QVariantMap& params = QVariantMap());
-	void setWifiName(const QString& wifiName);
 	void setUptimeMinutes(int uptimeMinutes);
 	void updateUptime();
 	void serializeConfig(bool save);
