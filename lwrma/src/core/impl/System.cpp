@@ -65,7 +65,10 @@ AsyncOp *System::searchSsid(const QString& ssid)
 {
 	return m_impl->searchSsid(ssid);
 }
-
+AsyncOp *System::searchSsidList()
+{
+	return m_impl->searchSsidList();
+}
 AsyncOp *System::connectSsid(const QVariantMap& ssid)
 {
 	return m_impl->connectSsid(ssid);

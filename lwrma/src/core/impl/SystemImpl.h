@@ -41,6 +41,7 @@ public:
 
 	AsyncOp *startWlanService();
 	AsyncOp *searchSsid(const QString& ssid);
+	AsyncOp *searchSsidList();
 	AsyncOp *connectSsid(const QVariantMap& ssid);
 	AsyncOp *httpGet(const QString& url);
 	AsyncOp *createWlanProfile(const QString& ssid, const QString& password);

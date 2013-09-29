@@ -432,6 +432,13 @@ AsyncOp *SystemImpl::searchSsid(const QString& ssid)
     return op;
 }
 
+AsyncOp *SystemImpl::searchSsidList()
+{
+	SearchSsidListOp *op = new SearchSsidListOp(this);
+	op->start();
+	return op;
+}
+
 AsyncOp *SystemImpl::connectSsid(const QVariantMap& ssid)
 {
     ConnectSsidOp *op = new ConnectSsidOp(this, ssid);
@@ -1349,7 +1356,6 @@ int SearchSsidOp::process(QVariantMap& result)
                     ls.push_back(varEntry);
                     foundSSID = true;
                     break;
-
                 }
             }
         }
@@ -1406,14 +1412,12 @@ int SearchSsidListOp::process(QVariantMap& result)
 {
     WlanLib *wlanapi = m_system->m_wlanapi;
     int status;
-    bool foundSSID = false;
 
     DWORD err;
     HANDLE wlanHandle = NULL;
     PWLAN_INTERFACE_INFO_LIST intfList = NULL;
     PWLAN_AVAILABLE_NETWORK_LIST networkList = NULL;
     PWLAN_BSS_LIST bssList = NULL;
-
     do
     {
         if (isAborted())
@@ -1421,7 +1425,6 @@ int SearchSsidListOp::process(QVariantMap& result)
             status = AbortedError;
             break;
         }
-
         DWORD ver;
         err = wlanapi->WlanOpenHandle(1, NULL, &ver, &wlanHandle);
         if (err != ERROR_SUCCESS)
@@ -1429,15 +1432,12 @@ int SearchSsidListOp::process(QVariantMap& result)
             status = translateWin32Error(err);
             break;
         }
-
         LOG_INFO(QString::fromUtf8("Wlan version %1").arg(ver));
-
         if (isAborted())
         {
             status = AbortedError;
             break;
         }
-
         err = wlanapi->WlanEnumInterfaces(wlanHandle, NULL, &intfList);
         if (err != ERROR_SUCCESS)
         {
@@ -1481,10 +1481,8 @@ int SearchSsidListOp::process(QVariantMap& result)
                 varEntry.insert(QString::fromUtf8("ssid"), ssid);
                 varEntry.insert(QString::fromUtf8("mac"), QByteArray(reinterpret_cast<char*>(bssEntry->dot11Bssid), 6));
                 ls.push_back(varEntry);
-                LOG_INFO(QString::fromUtf8("found ssid : %1 for connect set").arg(QString::fromLocal8Bit(ssid.data())));
-
+               // LOG_INFO(QString::fromUtf8("found ssid : %1 for connect set").arg(QString::fromLocal8Bit(ssid.data())));
             }
-
         }
         else
         {
@@ -1495,7 +1493,6 @@ int SearchSsidListOp::process(QVariantMap& result)
                 status = translateWin32Error(err);
                 break;
             }
-
             for (DWORD i = 0; i < networkList->dwNumberOfItems; i++)
             {
                 PWLAN_AVAILABLE_NETWORK network = networkList->Network + i;
@@ -1506,17 +1503,14 @@ int SearchSsidListOp::process(QVariantMap& result)
                 ls.push_back(varEntry);
             }
         }
-
         result.insert(QString::fromUtf8("ssidList"), ls);
         status = NoError;
     }
     while (false);
-
     if (bssList)
     {
         wlanapi->WlanFreeMemory(bssList);
     }
-
     if (networkList)
     {
         wlanapi->WlanFreeMemory(networkList);
