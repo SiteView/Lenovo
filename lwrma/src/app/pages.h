@@ -140,6 +140,7 @@ private Q_SLOTS:
 
 private:
 	void searchSsid();
+	void searchSsidList();
 	void connectSsid();
 	void discoverSoap();
 	void connectLan();
@@ -276,14 +277,12 @@ protected:
 private Q_SLOTS:
 		void onComboxChanged(QString &name);
 		void onNextButtonClicked();
+		void updateUIState();
 private:
-	QPointer<QAbstractButton> m_quitButton;
+	QPointer<QAbstractButton> m_nextButton;
 	QPointer<QLabel> m_promptLabel;
 	QPointer<QLabel> m_modLabel;
-//	QPointer<QLineEdit> m_SSIDEdit;
 	QPointer<QLineEdit> m_SSIDNewName;
-//	QPointer<QComboBox> m_SSIDList;
-
 };
 
 class UIReConnectWifi: public AppPage
@@ -295,6 +294,7 @@ protected:
 	private Q_SLOTS:
 		void onComboxChanged(QString &name);
 		void onNextButtonClicked();
+		void onSearchSsidListFinished();
 private:
 	QPointer<QAbstractButton> m_quitButton;
 	QPointer<QLabel> m_promptLabel;
@@ -303,8 +303,9 @@ private:
 	QPointer<QLineEdit> m_SSIDEdit;
 	QPointer<QComboBox> m_SSIDList;
 	QPointer<QLineEdit> m_PasswordEdit;
+	QPointer<AsyncOp> m_op;
 
-
+	QString m_mac;
 };
 
 class UICallHelp

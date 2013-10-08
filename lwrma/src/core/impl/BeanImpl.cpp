@@ -1498,7 +1498,7 @@ void ReconnectRouterOp::onConnectProfileFinished()
     }
 
     int result = op->result();
-    LOG_DEBUG(QString::fromUtf8("connectWlanProfile result: %1").arg(result));
+    LOG_DEBUG(QString::fromUtf8("connectWlanProfile %1 result: %1").arg(m_wifiName).arg(result));
     if (result == WlanProfileNotFound )
     {
         LOG_DEBUG(QString::fromUtf8("recreate profile?"));
@@ -1515,7 +1515,7 @@ void ReconnectRouterOp::onConnectProfileFinished()
 void ReconnectRouterOp::discoverRouter()
 {
     LOG_DEBUG(QString::fromUtf8("discover router %1").arg(m_mac));
-    m_op = m_bean->discoverRouterSoap(5000, m_mac, 12, 5000);
+    m_op = m_bean->discoverRouterSoap(5000, m_mac, 8, 5000);
     connect(m_op, SIGNAL(finished()), SLOT(onDiscoverRouterFinished()));
 }
 

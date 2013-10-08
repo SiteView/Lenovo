@@ -121,6 +121,7 @@ private Q_SLOTS:
     void onWakeUpNetworkConnectionChanged();
     void onSleepNetworkConnectionChanged();
 
+
 private:
 	void unloadPage();
 	void collectNetworkPerf();

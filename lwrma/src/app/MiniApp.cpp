@@ -1454,7 +1454,7 @@ bool MiniApp::checkRouter2()
     QString routeIP=soapCore()->host();
     QString arguments;
     LOG_DEBUG(routeIP);
-    arguments =QString::fromUtf8("ping %1 -n 1 -w 1").arg(routeIP);
+    arguments =QString::fromUtf8("ping %1 -n 3 -w 3").arg(routeIP); // 无线网络不能只ping 一次;
     connected->start(arguments);
     int exitCode;
     if(!connected->waitForFinished())

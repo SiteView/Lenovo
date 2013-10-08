@@ -984,7 +984,7 @@ void QuitDog::dogRun()
         switch (dwWait)
         {
         case WAIT_OBJECT_0:
-            LOG_DEBUG(QString::fromUtf8("WAIT_OBJECT_0"));
+ //          LOG_DEBUG(QString::fromUtf8("WAIT_OBJECT_0"));
             loopFlag = false;
             break;
         case WAIT_OBJECT_0 + 1:
@@ -992,7 +992,7 @@ void QuitDog::dogRun()
             loopFlag = false;
             break;
         case WAIT_OBJECT_0 + 2:
-            LOG_DEBUG(QString::fromUtf8("WAIT_OBJECT_0 + 2"));
+ //           LOG_DEBUG(QString::fromUtf8("WAIT_OBJECT_0 + 2"));
             QMetaObject::invokeMethod(this, "onAddrChanged", Qt::QueuedConnection);
             break;
         default:
@@ -1736,15 +1736,7 @@ int ConnectSsidOp::process(QVariantMap& result)
             status = translateWin32Error(err);
             break;
         }
-        /*
-        LOG_DEBUG(QString::fromUtf8("conn state: %1").arg(connInfo->isState));
-        if (connInfo->isState != wlan_interface_state_connected) {
-        	// TODO:
-        	LOG_WARNING(QString::fromUtf8("state not match"));
-        	status = UnknownError;
-        	break;
-        }
-        */
+
         if (connInfo->wlanAssociationAttributes.dot11Ssid.uSSIDLength != dot11Ssid.uSSIDLength
                 || memcmp(connInfo->wlanAssociationAttributes.dot11Ssid.ucSSID, dot11Ssid.ucSSID, dot11Ssid.uSSIDLength) != 0)
         {

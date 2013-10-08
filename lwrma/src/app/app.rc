@@ -43,12 +43,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Lenovo"
             VALUE "FileDescription", "联想无线路由管理助手"
-            VALUE "FileVersion", "1.0.169.16"
+            VALUE "FileVersion", "1.0.169.17"
             VALUE "InternalName", "MiniApp"
-            VALUE "LegalCopyright", "Copyright (C) 2012"
+            VALUE "LegalCopyright", "Copyright (C) 2013"
             VALUE "OriginalFilename", "lwrma"
             VALUE "ProductName", "联想无线路由管理助手"
-            VALUE "ProductVersion", "1.0.169.16"
+            VALUE "ProductVersion", "1.0.169.17"
         END
     END
     BLOCK "VarFileInfo"
